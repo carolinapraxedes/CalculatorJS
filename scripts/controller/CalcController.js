@@ -36,6 +36,7 @@ class CalcController{
     }
 
     //métodos de ações para a calculadora
+    
     clearAll(){
         this._operation = [];
         //vai esvaziar o array
@@ -47,7 +48,46 @@ class CalcController{
         
     }
 
+    getLastOperation(){
+        //pegando o ultimo elemento do array
+        return  this._operation[this._operation.length-1]
+
+        //isso é necessário para juntar os números até 
+        //o momento que a pessoa aperta um botão não-numérico(NaN)
+    }
+
+    isOperator(value){
+        //verifica se existe ai dentro o value que foi passado
+        return (['+','-','*','/','%'].indexOf(value) > -1);
+            //o indexOf vai buscar o valor do value dentro do array
+            //se nao encontrar, ele vai retornar -1
+
+    }
+
     addOperation(value){
+        //vai verificar se o ultimo botão apertado é 
+        //um número ou nao-numero
+        if(isNaN(this.getLastOperation())){
+            //Vai entrar aqui se for string
+            if(this.isOperator(value)){
+                //troca o operador
+                this._operation[this._operation.length - 1] = value;
+                //o ultimo elemento vai ser igual ao operador do momento
+                //ele apenas trocou os elementos
+            }else{
+                //não é operador(+,-,*,/)
+            }
+
+        }else{
+            //vem pra cá se for um número
+            let newValue = this.getLastOperation().toString() + value.toString();
+            //vou juntar os numeros, ex:
+            //"1"+"1" = "11"
+            this._operation.push(newValue);
+            //adicionando o novo valor no array
+        }
+
+
         this._operation.push(value);
         //push adiciona mais um elemento no final do array
         //tudo que for numero, ele adiciona
@@ -65,30 +105,34 @@ class CalcController{
         switch(value){
             //ac = limpa tudo
             case 'ac':
-
+                this.clearAll();
             break;
             //ce = cancela a ultima entrada
             case 'ce':
-
+                this.clearEntry();
             break;
             case 'soma':
-
+                this.addOperation('+');
             break;
             case 'subtracao':
-
+                this.addOperation('-');
             break;
             case 'divisao':
-
+                this.addOperation('/');
             break;
             case 'multiplicacao':
-
+                this.addOperation('*');
             break;
             case 'porcento':
-
+                this.addOperation('%');
             break;
             case 'igual':
 
             break;
+            case 'ponto':
+                this.addOperation('.');
+            break;
+
             case '0':
             case '1':
             case '2':
